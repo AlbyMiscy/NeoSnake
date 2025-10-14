@@ -8,8 +8,7 @@
 
 </div>
 
-Un classico gioco del Serpente implementato in **C++17**, utilizzando la **libreria SFML 3.0.1** per la grafica.  
-Il progetto è gestito tramite **CMake 3.28** ed è pensato per l’ambiente **Linux** (compilatori GCC o Clang).
+Un classico gioco del Serpente implementato in **C++17**, utilizzando la **libreria SFML 3.0.1** per la grafica.  Il progetto è gestito tramite **CMake 3.28** ed è pensato per l’ambiente **Linux** (compilatori GCC o Clang).
 
 ---
 
@@ -43,7 +42,6 @@ L’eseguibile verrà generato in:
 ```bash
 build/bin/NeoSnake
 ```
-
 
 ### 🔹 3. Esecuzione
 Esegui il gioco da terminale:
