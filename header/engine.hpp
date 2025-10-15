@@ -35,18 +35,27 @@ class Engine {
 
         // Fruit
         Fruit fruit;
+
         Time timeSinceLastMove;
+
+        int currentGameState; 
+        int lastGameState;
 
         void setCurrentView();
         void ResizeView(const RenderWindow& window, View& view);
 
     public:
         enum Direction { UP, RIGHT, DOWN, LEFT };
+        enum GameState { RUNNING, PAUSED, GAMEOVER };
 
         Engine();
 
+        void startGame();
+
         void input();
         void addDirection(int newDirection);
+        void togglePause();
+
         void update();
 
         void draw();
