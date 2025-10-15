@@ -80,6 +80,13 @@ void Engine::update(){
             moveFruit();
         }
 
+        // Collision detection - Snake Body
+        for(size_t s = 1; s < snake.size(); s++){
+            if(snake[0].getShape().getGlobalBounds().findIntersection(snake[s].getShape().getGlobalBounds())){
+                currentGameState = GAMEOVER;
+            }
+        }
+
         // Reset the last move timer
         timeSinceLastMove = Time::Zero;
     } // END update snake position
