@@ -6,8 +6,16 @@ void Engine::input(){
                 window.close();
             },
             [this](const sf::Event::KeyPressed& e) {
+                if(currentGameState == GameState::GAMEOVER){
+                    if(e.scancode == Keyboard::Scancode::Enter){
+                        startGame();
+                    }
+                }
                 switch (e.scancode)
                 {
+                case Keyboard::Scancode::P:
+                    togglePause();
+                    break;
                 case Keyboard::Scancode::Escape:
                     window.close();
                     return;
@@ -38,5 +46,15 @@ void Engine::addDirection(int newDirection){
         if(direction.back() != newDirection){
             direction.emplace_back(newDirection);
         }
+    }
+}
+
+void Engine::togglePause(){
+    if(currentGameState == GameState::RUNNING){
+        lastGameState = currentGameState;
+        currentGameState = GameState::PAUSED;
+    }
+    else if(currentGameState == GameState::PAUSED){
+        currentGameState = lastGameState;
     }
 }

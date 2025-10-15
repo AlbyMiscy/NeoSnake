@@ -30,15 +30,24 @@ class Engine {
 
         // Fruit
         Fruit fruit;
+
         Time timeSinceLastMove;
+
+        int currentGameState; 
+        int lastGameState;
 
     public:
         enum Direction { UP, RIGHT, DOWN, LEFT };
+        enum GameState { RUNNING, PAUSED, GAMEOVER };
 
         Engine();
 
+        void startGame();
+
         void input();
         void addDirection(int newDirection);
+        void togglePause();
+
         void update();
 
         void draw();
