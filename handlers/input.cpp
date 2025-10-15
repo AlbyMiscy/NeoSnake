@@ -52,11 +52,11 @@ void Engine::addDirection(int newDirection){
     }
 }
 
-<<<<<<< HEAD
 void Engine::ResizeView(const RenderWindow& window, View& view){
     float aspectRatio = float(window.getSize().x) / float(window.getSize().y);
     view.setSize(Vector2f(VIEW_HEIGHT * aspectRatio, VIEW_HEIGHT));
-=======
+}
+
 void Engine::togglePause(){
     if(currentGameState == GameState::RUNNING){
         lastGameState = currentGameState;
@@ -65,5 +65,4 @@ void Engine::togglePause(){
     else if(currentGameState == GameState::PAUSED){
         currentGameState = lastGameState;
     }
->>>>>>> 9eeeb6661795f42b6c46bf3acb0ee92e3d572a0e
 }
