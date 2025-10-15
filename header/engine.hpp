@@ -14,8 +14,6 @@ using namespace std;
 constexpr unsigned WINDOW_WIDTH = 1280;
 constexpr unsigned WINDOW_HEIGHT = 720;
 
-// static const float VIEW_WIDTH = 300; 
-// static const float VIEW_HEIGHT = 200;
 static const float VIEW_HEIGHT = 1200.f;
 
 class Engine {

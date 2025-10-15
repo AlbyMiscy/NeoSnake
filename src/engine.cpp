@@ -34,7 +34,7 @@ void Engine::run(){
     }
 }
 
-void Engine::setCurrentView(){
+void Engine::setCurrentView() {
     view.setCenter(snake.front().getPosition());
     window.setView(view);
 }
