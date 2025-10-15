@@ -11,15 +11,20 @@
 using namespace sf;
 using namespace std;
 
-constexpr unsigned WINDOW_WIDTH = 800;
-constexpr unsigned WINDOW_HEIGHT = 600;
+constexpr unsigned WINDOW_WIDTH = 1280;
+constexpr unsigned WINDOW_HEIGHT = 720;
+
+static const float VIEW_HEIGHT = 900.f;
 
 class Engine {
     private:
         // Window
         RenderWindow window;
-        const unsigned int FPS = 60;
+        const unsigned int FPS = 120;
         static const Time timePerFrame;
+
+        // View
+        View view;
 
         // Snake
         vector<Snake> snake;
@@ -35,6 +40,9 @@ class Engine {
 
         int currentGameState; 
         int lastGameState;
+
+        void setCurrentView();
+        void ResizeView(const RenderWindow& window, View& view);
 
     public:
         enum Direction { UP, RIGHT, DOWN, LEFT };
