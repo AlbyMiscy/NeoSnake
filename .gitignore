@@ -1,0 +1,50 @@
+# Prerequisiti / file temporanei compilatore
+*.d
+
+# Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled headers
+*.gch
+*.pch
+
+# Librerie dinamiche
+*.so
+*.so.*
+*.dylib
+*.dll
+
+# Librerie statiche
+*.lai
+*.la
+*.a
+*.lib
+
+# Moduli Fortran
+*.mod
+*.smod
+
+# Eseguibili
+*.exe
+*.out
+*.app
+
+# Directory di build (CMake)
+build/
+_build/
+[Cc]MakeCache.txt
+[Cc]MakeFiles/
+cmake_install.cmake
+Makefile
+
+# File generati da CMake Presets
+CMakeUserPresets.json
+
+# Log o temporanei vari
+*.log
+
+# debug 
+.vscode
