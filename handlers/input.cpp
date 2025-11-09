@@ -5,6 +5,9 @@ void Engine::input(){
             [this](const sf::Event::Closed&){
                 window.close();
             },
+            [this](const sf::Event::Resized&){
+                ResizeView(window, view);
+            },
             [this](const sf::Event::KeyPressed& e) {
                 if(currentGameState == GameState::GAMEOVER){
                     if(e.scancode == Keyboard::Scancode::Enter){
@@ -47,6 +50,11 @@ void Engine::addDirection(int newDirection){
             direction.emplace_back(newDirection);
         }
     }
+}
+
+void Engine::ResizeView(const RenderWindow& window, View& view){
+    float aspectRatio = float(window.getSize().x) / float(window.getSize().y);
+    view.setSize(Vector2f(VIEW_HEIGHT * aspectRatio, VIEW_HEIGHT));
 }
 
 void Engine::togglePause(){
