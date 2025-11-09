@@ -35,6 +35,10 @@
 # Directory di build (CMake)
 build/
 _build/
+build-debug/
+_build-debug/
+build-release/
+_build-release/
 [Cc]MakeCache.txt
 [Cc]MakeFiles/
 cmake_install.cmake

@@ -1,33 +1,48 @@
 #include "engine.hpp"
 
-void Engine::moveFruit(){
-    // find a location to place the fruit
-    // must nt be inside the snake, or the wall
+// Relocate the fruit to a random position on the map,
+// avoiding both snake segments and wall cells.
+void Engine::moveFruit() {
+    const float cell = map.getCellSize();
 
-    sf::Vector2f fruitResolution(
-        static_cast<float>(WINDOW_WIDTH) / 20.f - 2.f,
-        static_cast<float>(WINDOW_HEIGHT) / 20.f - 2.f
-    );
-    Vector2f newFruitLocation;
-    bool badLocation = false;
+    size_t cols = static_cast<size_t>(map.getWorldWidth() / cell);
+    size_t rows = static_cast<size_t>(map.getWorldHeight() / cell);
+
+    if (cols == 0 || rows == 0)
+        return;
+
+    Vector2f newPos;
+    bool valid = false;
+
+    // Random engine
     srand(static_cast<unsigned int>(time(nullptr)));
-    do {
-        badLocation = false;
-        newFruitLocation.x = (float)(1 + rand() / ((RAND_MAX + 1u) / (int)fruitResolution.x)) * 20;
-        newFruitLocation.y = (float)(1 + rand() / ((RAND_MAX + 1u) / (int)fruitResolution.y)) * 20;
 
-        // Check if it is in the snake
-        for(auto & s : snake){
-            const sf::FloatRect snakeBounds = s.getShape().getGlobalBounds();
-            const sf::FloatRect fruitRect({newFruitLocation.x, newFruitLocation.y},
-                                        {20.f, 20.f});
-        
-            if(snakeBounds.findIntersection(fruitRect)){
-                badLocation = true;
+    // Try until a valid position is found
+    while (!valid) {
+        size_t cx = rand() % cols;
+        size_t cy = rand() % rows;
+
+        // Skip this cell if it's a wall
+        if (map.isWallCell(cx, cy))
+            continue;
+
+        // Convert cell coordinates to world coordinates
+        newPos = Vector2f(static_cast<float>(cx) * cell,
+                          static_cast<float>(cy) * cell);
+
+        // Check collision with the snake body
+        bool overlapsSnake = false;
+        for (auto& section : snake) {
+            if (section.getPosition() == newPos) {
+                overlapsSnake = true;
                 break;
             }
         }
+
+        // If it doesn’t overlap the snake, it's valid
+        if (!overlapsSnake)
+            valid = true;
     }
-    while (badLocation);
-    fruit.setPosition(newFruitLocation);
+
+    fruit.setPosition(newPos);
 }
