@@ -52,5 +52,5 @@ build-{modalità}/bin/NeoSnake
 ### 🔹 3. Esecuzione
 Esegui il gioco da terminale:
 ```
-./build/bin/NeoSnake
+./build-{modalità}/bin/NeoSnake
 ```
