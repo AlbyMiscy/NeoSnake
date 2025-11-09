@@ -33,6 +33,8 @@
 *.app
 
 # Directory di build (CMake)
+build/
+_build/
 build-debug/
 _build-debug/
 build-release/
