@@ -3,10 +3,13 @@
 
 #include "snake.hpp"
 #include "fruit.hpp"
+#include "map.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <vector>
 #include <deque>
+#include <cmath>
+#include <algorithm>
 
 using namespace sf;
 using namespace std;
@@ -22,6 +25,10 @@ class Engine {
         RenderWindow window;
         const unsigned int FPS = 120;
         static const Time timePerFrame;
+
+        // Map
+        Map map{20.0f};
+        Texture wallText;
 
         // View
         View view;
@@ -41,8 +48,9 @@ class Engine {
         int currentGameState; 
         int lastGameState;
 
-        void setCurrentView();
+        void setCurrentView(float dtSeconds);
         void ResizeView(const RenderWindow& window, View& view);
+        void buildMapFromLevelImage();
 
     public:
         enum Direction { UP, RIGHT, DOWN, LEFT };

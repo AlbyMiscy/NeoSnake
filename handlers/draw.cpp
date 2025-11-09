@@ -3,6 +3,9 @@
 void Engine::draw(){
     window.clear(Color::Black);
 
+    // Map
+    map.Draw(window);
+
     // Draw fruit section
     window.draw(fruit.getSprite());
 
@@ -12,4 +15,20 @@ void Engine::draw(){
     }
 
     window.display();
+}
+
+void Engine::buildMapFromLevelImage(){
+    if(!wallText.loadFromFile("../resources/texture/wall.png")){
+        return;
+    }
+    else map.SetTileTexture(&wallText);
+
+    sf::Image img;
+    
+    if (!img.loadFromFile("../resources/levels/Level01.png")) {
+        // fallback
+        return;
+    }
+
+    map.CreateFromImage(img);
 }

@@ -20,7 +20,9 @@ void Engine::startGame(){
 
     float aspect = float(WINDOW_WIDTH) / float(WINDOW_HEIGHT);
     view.setSize({VIEW_HEIGHT * aspect, VIEW_HEIGHT});
-    setCurrentView();
+    setCurrentView(0.0f);
+
+    buildMapFromLevelImage();
 
     direction.clear();
 
@@ -45,14 +47,31 @@ void Engine::run(){
         }
 
         timeSinceLastMove += dt;
-        setCurrentView();
+        setCurrentView(dt.asSeconds());
         input();
         update();
         draw();
     }
 }
 
-void Engine::setCurrentView() {
-    view.setCenter(snake.front().getPosition());
+void Engine::setCurrentView(float dtSeconds) {
+    Vector2f target = snake.front().getPosition();
+
+    Vector2f halfView = view.getSize() / 2.f;
+
+    float mapW = map.getWorldWidth();
+    float mapH = map.getWorldHeight();
+
+    target.x = clamp(target.x, halfView.x, mapW - halfView.x);
+    target.y = clamp(target.y, halfView.y, mapH - halfView.y);
+
+    Vector2f current = view.getCenter();
+
+    const float cameraSpeed = 8.0f;
+
+    Vector2f direction = target - current;
+    Vector2f newCenter = current + direction * (cameraSpeed * dtSeconds);
+
+    view.setCenter(newCenter);
     window.setView(view);
 }
