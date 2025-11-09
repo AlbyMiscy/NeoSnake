@@ -45,4 +45,5 @@ void Engine::moveFruit() {
     }
 
     fruit.setPosition(newPos);
+    fruit.pickRandomFrame();
 }

@@ -15,6 +15,9 @@ void Engine::startGame(){
     timeSinceLastMove = Time::Zero;
     sectionToAdd = 0;
     
+    if(fruitAtlas.loadFromFile(RESOURCE_DIR "/texture/fruit.png"))
+        fruit.setTexture(&fruitAtlas, 3);
+
     newSnake();
     moveFruit();
 

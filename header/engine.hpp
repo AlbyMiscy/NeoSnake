@@ -4,6 +4,7 @@
 #include "snake.hpp"
 #include "fruit.hpp"
 #include "map.hpp"
+#include "resource_path.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <vector>
@@ -42,6 +43,7 @@ class Engine {
 
         // Fruit
         Fruit fruit;
+        Texture fruitAtlas;
 
         Time timeSinceLastMove;
 
