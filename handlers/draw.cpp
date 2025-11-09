@@ -1,4 +1,5 @@
 #include "engine.hpp"
+#include "resource_path.h"
 
 void Engine::draw(){
     window.clear(Color::Black);
@@ -18,14 +19,14 @@ void Engine::draw(){
 }
 
 void Engine::buildMapFromLevelImage(){
-    if(!wallText.loadFromFile("../resources/texture/wall.png")){
+    if(!wallText.loadFromFile(RESOURCE_DIR "/texture/wall.png")){
         return;
     }
     else map.SetTileTexture(&wallText);
 
     sf::Image img;
-    
-    if (!img.loadFromFile("../resources/levels/Level01.png")) {
+
+    if (!img.loadFromFile(RESOURCE_DIR "/levels/Level01.png")) {
         // fallback
         return;
     }

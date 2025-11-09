@@ -25,22 +25,28 @@ Posizionati nella root del progetto e genera la cartella di build con:
 
 #### 🔧 Modalità Debug (consigliata per sviluppo)
 ```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake -S . -B build-debug -DCMAKE_BUILD_TYPE=Debug
 ```
 #### 🚀 Modalità Release (per la versione finale)
 ```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build-release -DCMAKE_BUILD_TYPE=Release
 ```
 
 ### 🔹 2. Compilazione
-Dopo la configurazione, costruisci il progetto con:
+Dopo la configurazione, costruisci il progetto:
+
+#### 🔧 Modalità Debug
 ```bash
-cmake --build build
+cmake --build build-debug --config Debug -j$(nproc)
+```
+#### 🚀 Modalità Release
+```bash
+cmake --build build-release --config Release -j$(nproc)
 ```
 
-L’eseguibile verrà generato in:
+L’eseguibile verrà generato in entrambi i casi in:
 ```bash
-build/bin/NeoSnake
+build-{modalità}/bin/NeoSnake
 ```
 
 ### 🔹 3. Esecuzione

@@ -6,6 +6,13 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+set(GENERATED_DIR ${CMAKE_BINARY_DIR}/generated)
+file(MAKE_DIRECTORY ${GENERATED_DIR})
+
+configure_file(${CMAKE_SOURCE_DIR}/header/resource_path.h.in
+               ${GENERATED_DIR}/resource_path.h
+               @ONLY)
+
 include(FetchContent)
 FetchContent_Declare(SFML
   GIT_REPOSITORY https://github.com/SFML/SFML.git
@@ -29,6 +36,7 @@ add_executable(NeoSnake ${SOURCES})
 target_compile_features(NeoSnake PRIVATE cxx_std_17)
 
 target_include_directories(NeoSnake PRIVATE
+    ${GENERATED_DIR}
     ${CMAKE_SOURCE_DIR}/header
     ${CMAKE_SOURCE_DIR}/handlers
 )

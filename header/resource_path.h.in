@@ -1,0 +1,4 @@
+#pragma once
+
+// Definisce RESOURCE_DIR come una string literal (raw) contenente il path alla cartella resources
+#define RESOURCE_DIR R"(@CMAKE_SOURCE_DIR@/resources)"
