@@ -16,7 +16,12 @@ public:
     Vector2f getPosition();
     void setPosition(Vector2f);
 
-    RectangleShape getShape();
+    RectangleShape& getShape();
+
+    // Texture / appearance helpers
+    void setTexture(sf::Texture* texture);
+    void setTextureRect(const sf::IntRect& rect);
+    void setRotation(float angle);
 
     void update();
 };

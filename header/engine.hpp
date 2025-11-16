@@ -44,6 +44,7 @@ class Engine {
         // Fruit
         Fruit fruit;
         Texture fruitAtlas;
+        Texture snakeSkin;
 
         Time timeSinceLastMove;
 
