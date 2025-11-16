@@ -1,5 +1,4 @@
 #include "engine.hpp"
-#include "resource_path.h"
 
 void Engine::draw(){
     window.clear(Color::Black);

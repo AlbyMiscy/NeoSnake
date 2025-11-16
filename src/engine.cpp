@@ -15,6 +15,14 @@ void Engine::startGame(){
     timeSinceLastMove = Time::Zero;
     sectionToAdd = 0;
     
+    if(fruitAtlas.loadFromFile(RESOURCE_DIR "/texture/fruit.png"))
+        fruit.setTexture(&fruitAtlas, 3);
+
+    // Load snake skin
+    if(!snakeSkin.loadFromFile(RESOURCE_DIR "/texture/skin/snake_skin_1-1.png")){
+        // If loading fails, continue - snake will use fallback fill color
+    }
+
     newSnake();
     moveFruit();
 
