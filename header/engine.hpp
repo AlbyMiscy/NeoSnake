@@ -5,12 +5,16 @@
 #include "fruit.hpp"
 #include "map.hpp"
 #include "resource_path.h"
+#include "mainMenuScreen.hpp"
+#include "pauseScreen.hpp"
+#include "gameOverScreen.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <vector>
 #include <deque>
 #include <cmath>
 #include <algorithm>
+#include <optional>
 
 using namespace sf;
 using namespace std;
@@ -33,6 +37,7 @@ class Engine {
 
         // View
         View view;
+        View uiView;
 
         // Snake
         vector<Snake> snake;
@@ -60,15 +65,38 @@ class Engine {
         int currentGameState; 
         int lastGameState;
 
+        // Score system
+        int score;
+        Font uiFont;
+        std::optional<Text> scoreText;
+        bool scoreFontLoaded;
+
+        MainMenuScreen mainMenuScreen;
+        PauseScreen pauseScreen; 
+        GameOverScreen gameOverScreen;
+
         void setCurrentView(float dtSeconds);
-        void ResizeView(const RenderWindow& window, View& view);
+        void ResizeView(RenderWindow& window);
         void buildMapFromLevelImage();
+        void updateScoreText();
 
     public:
         enum Direction { UP, RIGHT, DOWN, LEFT };
-        enum GameState { RUNNING, PAUSED, GAMEOVER };
+        enum GameState { MENU, RUNNING, PAUSED, GAMEOVER };
 
         Engine();
+
+        RenderWindow& getWindow() { return window; }
+        const View& getUIView() const { return uiView; }
+
+        GameState getGameState() const { return (GameState)currentGameState; }
+        void setGameState(GameState state) { currentGameState = state; }
+
+        int getScore() const { return score; }
+        void resetScore();
+        void addScore(int delta);
+
+        void handleGameKeyPressed(const Event::KeyPressed& e);
 
         void startGame();
 

@@ -3,22 +3,51 @@
 void Engine::draw(){
     window.clear(Color::Black);
 
-    // Map
-    map.Draw(window);
+    // Assicura che la view del gioco sia attiva per disegnare il mondo
+    window.setView(view);
 
-    // Draw fruit section
-    window.draw(fruit.getSprite());
+    if (currentGameState != GameState::MENU) {
+        // Map
+        map.Draw(window);
 
-    // Draw snake section
-    for(auto & s : snake){
-        window.draw(s.getShape());
+        // Fruit
+        window.draw(fruit.getSprite());
+
+        // Snake
+        for(auto & s : snake){
+            window.draw(s.getShape());
+        }
+
+        drawDirectionArrow();
     }
-    
-    // Draw direction arrow
-    drawDirectionArrow();
+
+    // Draw score HUD when in RUNNING state
+    if (currentGameState == GameState::RUNNING && scoreFontLoaded && scoreText) {
+        View oldView = window.getView();
+        window.setView(uiView);
+        window.draw(*scoreText);
+        window.setView(oldView);
+    }
+
+    switch (currentGameState)
+    {
+        case GameState::MENU:
+            mainMenuScreen.draw(*this);
+            break;
+        case GameState::PAUSED:
+            pauseScreen.draw(*this);
+            break;
+        case GameState::GAMEOVER:
+            gameOverScreen.draw(*this);
+            break;
+        case GameState::RUNNING:
+        default:
+            break;
+    }
 
     window.display();
 }
+
 
 void Engine::buildMapFromLevelImage(){
     if(!wallText.loadFromFile(RESOURCE_DIR "/texture/wall.png")){

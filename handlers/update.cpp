@@ -1,6 +1,9 @@
 #include "engine.hpp"
 
 void Engine::update(){
+    if(currentGameState != GameState::RUNNING)
+        return;
+
     // update snake position
     if(timeSinceLastMove.asSeconds() >= seconds(1.f/float(speed)).asSeconds()){
         Vector2f thisSectionPosition = snake[0].getPosition();
@@ -59,6 +62,7 @@ void Engine::update(){
             nextHead.x + cell > mapW || nextHead.y + cell > mapH)
         {
             currentGameState = GameState::GAMEOVER;
+            gameOverScreen.setScore(score);
             timeSinceLastMove = Time::Zero;
             return;
         }
@@ -69,6 +73,7 @@ void Engine::update(){
         // Check if the destination cell corresponds to a wall in the map
         if (map.isWallCell(static_cast<size_t>(c.x), static_cast<size_t>(c.y))) {
             currentGameState = GameState::GAMEOVER;
+            gameOverScreen.setScore(score);
             timeSinceLastMove = Time::Zero;
             return;
         }
@@ -150,6 +155,7 @@ void Engine::update(){
         if(snake[0].getShape().getGlobalBounds().findIntersection(fruit.getSprite().getGlobalBounds())){
             sectionToAdd += 4;
             speed++;
+            addScore(1);
             moveFruit(); 
         }
 
@@ -157,6 +163,7 @@ void Engine::update(){
         for(size_t s = 1; s < snake.size(); s++){
             if(snake[0].getShape().getGlobalBounds().findIntersection(snake[s].getShape().getGlobalBounds())){
                 currentGameState = GAMEOVER;
+                gameOverScreen.setScore(score);
                 timeSinceLastMove = Time::Zero;
                 return;
             }

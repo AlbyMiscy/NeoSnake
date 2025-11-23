@@ -5,10 +5,29 @@ const Time Engine::timePerFrame = seconds(1.f/60.f);
 Engine::Engine(){
     window.create(VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), "NeoSnake", Style::Resize);
     window.setFramerateLimit(FPS);
-    startGame();
+
+    currentGameState = GameState::MENU;
+    lastGameState = currentGameState;
+
+    uiView = window.getDefaultView();
+
+    // Initialize score system
+    score = 0;
+    scoreFontLoaded = false;
+
+    if (uiFont.openFromFile(RESOURCE_DIR "/fonts/PressStart2P-Regular.ttf")) {
+        scoreFontLoaded = true;
+        scoreText.emplace(uiFont);
+        scoreText->setCharacterSize(24);
+        scoreText->setFillColor(Color::White);
+        scoreText->setPosition({10.f, 10.f}); // Top-left corner with margin
+        updateScoreText();
+    }
 }
 
 void Engine::startGame(){
+    resetScore();
+    
     speed = 4;
     snakeDirection = Direction::RIGHT;
     
@@ -44,26 +63,23 @@ void Engine::startGame(){
 void Engine::run(){
     Clock clock;
 
-    // main loop - Runs until the window is closed
     while(window.isOpen()){
         Time dt = clock.restart();
 
-        if(currentGameState == GameState::PAUSED || currentGameState == GameState::GAMEOVER){
-            input();
-            if(currentGameState == GameState::GAMEOVER){
-                draw();
-            }
-            sleep(milliseconds(2));
-            continue;
+        input();  
+
+        if (currentGameState == GameState::RUNNING) {
+            timeSinceLastMove += dt;
+            setCurrentView(dt.asSeconds());
+            update();
         }
 
-        timeSinceLastMove += dt;
-        setCurrentView(dt.asSeconds());
-        input();
-        update();
         draw();
+
+        sleep(milliseconds(2));
     }
 }
+
 
 void Engine::setCurrentView(float dtSeconds) {
     Vector2f target = snake.front().getPosition();
@@ -85,4 +101,20 @@ void Engine::setCurrentView(float dtSeconds) {
 
     view.setCenter(newCenter);
     window.setView(view);
+}
+
+void Engine::resetScore() {
+    score = 0;
+    updateScoreText();
+}
+
+void Engine::addScore(int delta) {
+    score += delta;
+    updateScoreText();
+}
+
+void Engine::updateScoreText() {
+    if (scoreFontLoaded && scoreText) {
+        scoreText->setString("Score: " + std::to_string(score));
+    }
 }
