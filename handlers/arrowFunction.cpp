@@ -4,8 +4,8 @@ void Engine::setupDirectionArrow(){
     currentArrowFrame = 0; 
     arrowAnimationTimer = Time::Zero;
     
-    // Setup arrow sprite
-    arrowSprite.setSize(Vector2f(20.f, 20.f));
+    // Setup arrow sprite (larger than fruit)
+    arrowSprite.setSize(Vector2f(40.f, 40.f));
     arrowSprite.setTexture(&arrowAtlas, true);
     arrowSprite.setFillColor(Color::White);
     
@@ -17,7 +17,7 @@ void Engine::setupDirectionArrow(){
     arrowSprite.setTextureRect(IntRect(Vector2i(0, 0), Vector2i(static_cast<int>(frameW), static_cast<int>(th))));
     
     // Set origin to center for rotation
-    arrowSprite.setOrigin(Vector2f(10.f, 10.f));
+    arrowSprite.setOrigin(Vector2f(20.f, 20.f));
 }
 
 void Engine::updateDirectionArrow(){

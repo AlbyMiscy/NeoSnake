@@ -51,7 +51,7 @@ class Engine {
         RectangleShape arrowSprite;
         int currentArrowFrame;
         Time arrowAnimationTimer;
-        const float ARROW_ANIMATION_SPEED = 0.2f;
+        const float ARROW_ANIMATION_SPEED = 0.5f;
         const float ARROW_MARGIN = 50.0f;
         const int ARROW_FRAME_COUNT = 3;
 
