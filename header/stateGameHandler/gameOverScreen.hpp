@@ -5,15 +5,19 @@
 #include <optional>
 
 using namespace sf;
+using namespace std;
 
 class GameOverScreen : public IScreen {
     private:
         Font font;
-        std::optional<Text> gameOverText;
-        std::optional<Text> scoreText;
-        std::optional<Text> instructionText;
-        RectangleShape overlay;  // Overlay semi-trasparente
+        optional<Text> gameOverText;
+        optional<Text> scoreText;
+        RectangleShape overlay;  
         bool fontLoaded;
+
+        optional<Text> restartText;
+        optional<Text> quitText;
+        int selectedIndex = 0;
 
     public:
         GameOverScreen();
@@ -22,5 +26,6 @@ class GameOverScreen : public IScreen {
         void update(Engine& engine, Time dt) override;
         void draw(Engine& engine) override;
         
-        void setScore(int score);  // Per aggiornare il punteggio visualizzato
+        // TODO
+        void setScore(int score); 
 };

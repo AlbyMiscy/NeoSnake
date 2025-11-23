@@ -5,14 +5,18 @@
 #include <optional>
 
 using namespace sf;
+using namespace std;
 
 class PauseScreen : public IScreen {
     private:
         Font font;
-        std::optional<Text> pauseText;
-        std::optional<Text> instructionText;
-        RectangleShape overlay;  // Overlay semi-trasparente
+        optional<Text> pauseText;
+        RectangleShape overlay;  
         bool fontLoaded;
+
+        optional<Text> resumeText;
+        optional<Text> escText;
+        int selectedIndex = 0;
 
     public:
         PauseScreen();

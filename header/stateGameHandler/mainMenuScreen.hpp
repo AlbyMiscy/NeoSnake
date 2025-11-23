@@ -5,13 +5,17 @@
 #include <optional>
 
 using namespace sf;
+using namespace std;
 
 class MainMenuScreen : public IScreen {
     private:
         Font font;
-        std::optional<Text> titleText;
-        std::optional<Text> instructionText;
+        optional<Text> titleText;
         bool fontLoaded;
+
+        optional<Text> startText;
+        optional<Text> quitText;
+        int selectedIndex = 0;
 
     public:
         MainMenuScreen();

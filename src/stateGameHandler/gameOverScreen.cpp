@@ -4,24 +4,30 @@
 #include <sstream>
 
 GameOverScreen::GameOverScreen()
-: fontLoaded(false)
+: fontLoaded(false),
+selectedIndex(0)
 {
     if (font.openFromFile(RESOURCE_DIR "/fonts/PressStart2P-Regular.ttf")) {
         fontLoaded = true;
 
         gameOverText.emplace(font);
         gameOverText->setString("GAME OVER");
-        gameOverText->setCharacterSize(40);
-        gameOverText->setFillColor(sf::Color::Red);
+        gameOverText->setCharacterSize(50);
+        gameOverText->setFillColor(Color::Red);
 
         scoreText.emplace(font);
         scoreText->setCharacterSize(24);
-        scoreText->setFillColor(sf::Color::White);
+        scoreText->setFillColor(Color::White);
 
-        instructionText.emplace(font);
-        instructionText->setString("Invio: ricomincia\nESC: esci");
-        instructionText->setCharacterSize(20);
-        instructionText->setFillColor(sf::Color::White);
+        restartText.emplace(font);
+        restartText->setString("Restart");
+        restartText->setCharacterSize(35);
+        restartText->setFillColor(Color::Yellow); // default
+
+        quitText.emplace(font);
+        quitText->setString("Quit");
+        quitText->setCharacterSize(35);
+        quitText->setFillColor(Color::White);
     }
 
     overlay.setFillColor(sf::Color(0, 0, 0, 180));
@@ -37,11 +43,35 @@ void GameOverScreen::setScore(int score)
 
 void GameOverScreen::handleKeyPressed(Engine& engine, const Event::KeyPressed& keyEvent)
 {
-    if (keyEvent.scancode == Keyboard::Scancode::Enter) {
-        engine.startGame();
-    }
-    else if (keyEvent.scancode == Keyboard::Scancode::Escape) {
-        engine.getWindow().close();
+    const int menuItemCount = 2; // RESTART, QUIT
+
+    switch (keyEvent.scancode)
+    {
+        case Keyboard::Scancode::Up:
+            selectedIndex = (selectedIndex - 1 + menuItemCount) % menuItemCount;
+            break;
+
+        case Keyboard::Scancode::Down:
+            selectedIndex = (selectedIndex + 1) % menuItemCount;
+            break;
+
+        case Keyboard::Scancode::Enter:
+            if (selectedIndex == 0) {
+                // RESTART
+                engine.startGame();
+            } else {
+                // QUIT
+                engine.getWindow().close();
+            }
+            break;
+        
+        case Keyboard::Scancode::Escape:
+            engine.getWindow().close();
+            break;
+
+
+        default:
+            break;
     }
 }
 
@@ -55,33 +85,67 @@ void GameOverScreen::draw(Engine& engine)
     if (!fontLoaded) return;
     auto& window = engine.getWindow();
 
-    sf::View oldView = window.getView();
+    View oldView = window.getView();
     window.setView(window.getDefaultView());
 
-    sf::Vector2u size = window.getSize();
-    overlay.setSize(sf::Vector2f(static_cast<float>(size.x), static_cast<float>(size.y)));
-
+    Vector2u size = window.getSize();
+    overlay.setSize(Vector2f(static_cast<float>(size.x), static_cast<float>(size.y)));
     window.draw(overlay);
 
+    const float centerX = static_cast<float>(size.x) / 2.f;
+
+    if (restartText && quitText) {
+        if (selectedIndex == 0) {
+            restartText->setFillColor(Color::Yellow);
+            quitText->setFillColor(Color::White);
+        } else {
+            restartText->setFillColor(Color::White);
+            quitText->setFillColor(Color::Yellow);
+        }
+    }
+
+    // title
     if (gameOverText) {
-        sf::FloatRect b = gameOverText->getLocalBounds();
+        FloatRect b = gameOverText->getLocalBounds();
         gameOverText->setOrigin({b.size.x / 2.f, b.size.y / 2.f});
-        gameOverText->setPosition({static_cast<float>(size.x) / 2.f, static_cast<float>(size.y) / 3.f});
+        gameOverText->setPosition(
+            { centerX,
+              static_cast<float>(size.y) / 3.f }
+        );
         window.draw(*gameOverText);
     }
 
+    // Score
     if (scoreText) {
-        sf::FloatRect b = scoreText->getLocalBounds();
+        FloatRect b = scoreText->getLocalBounds();
         scoreText->setOrigin({b.size.x / 2.f, b.size.y / 2.f});
-        scoreText->setPosition({static_cast<float>(size.x) / 2.f, static_cast<float>(size.y) / 2.f});
+        scoreText->setPosition(
+            { centerX,
+              static_cast<float>(size.y) / 2.f - 40.f }
+        );
         window.draw(*scoreText);
     }
 
-    if (instructionText) {
-        sf::FloatRect b = instructionText->getLocalBounds();
-        instructionText->setOrigin({b.size.x / 2.f, b.size.y / 2.f});
-        instructionText->setPosition({static_cast<float>(size.x) / 2.f, static_cast<float>(size.y) * 2.f / 3.f});
-        window.draw(*instructionText);
+    // Restart option
+    if (restartText) {
+        FloatRect b = restartText->getLocalBounds();
+        restartText->setOrigin({b.size.x / 2.f, b.size.y / 2.f});
+        restartText->setPosition(
+            { centerX,
+              static_cast<float>(size.y) / 2.f + 20.f }
+        );
+        window.draw(*restartText);
+    }
+
+    // Quit option 
+    if (quitText) {
+        FloatRect b = quitText->getLocalBounds();
+        quitText->setOrigin({b.size.x / 2.f, b.size.y / 2.f});
+        quitText->setPosition(
+            { centerX,
+              static_cast<float>(size.y) / 2.f + 80.f }
+        );
+        window.draw(*quitText);
     }
 
     window.setView(oldView);
