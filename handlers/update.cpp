@@ -164,5 +164,8 @@ void Engine::update(){
 
         // Reset the last move timer
         timeSinceLastMove = Time::Zero;
-    } 
+    }
+    
+    // Update direction arrow animation
+    updateDirectionArrow();
 }

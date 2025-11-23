@@ -40,11 +40,20 @@ class Engine {
         deque<int> direction;
         int speed;
         int sectionToAdd; 
+        Texture snakeSkin;
 
         // Fruit
         Fruit fruit;
         Texture fruitAtlas;
-        Texture snakeSkin;
+
+        // Arrow
+        Texture arrowAtlas;
+        RectangleShape arrowSprite;
+        int currentArrowFrame;
+        Time arrowAnimationTimer;
+        const float ARROW_ANIMATION_SPEED = 0.5f;
+        const float ARROW_MARGIN = 50.0f;
+        const int ARROW_FRAME_COUNT = 3;
 
         Time timeSinceLastMove;
 
@@ -77,6 +86,12 @@ class Engine {
 
         void newSnake();
         void addSnakeSection();
+
+        void setupDirectionArrow();
+        void updateDirectionArrow();
+        Vector2f calculateArrowPosition(Vector2f snakePos, Vector2f fruitPos);
+        float calculateArrowRotation(Vector2f snakePos, Vector2f fruitPos);
+        void drawDirectionArrow();
 
 };
 

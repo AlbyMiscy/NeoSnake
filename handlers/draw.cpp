@@ -13,6 +13,9 @@ void Engine::draw(){
     for(auto & s : snake){
         window.draw(s.getShape());
     }
+    
+    // Draw direction arrow
+    drawDirectionArrow();
 
     window.display();
 }
