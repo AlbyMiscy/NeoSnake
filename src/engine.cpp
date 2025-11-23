@@ -8,6 +8,8 @@ Engine::Engine(){
 
     currentGameState = GameState::MENU;
     lastGameState = currentGameState;
+
+    uiView = window.getDefaultView();
 }
 
 void Engine::startGame(){

@@ -6,7 +6,7 @@ void Engine::input(){
             window.close();
         },
         [this](const sf::Event::Resized&){
-            ResizeView(window, view);
+            ResizeView(window);
         },
         [this](const sf::Event::KeyPressed& e) {
 
@@ -69,9 +69,15 @@ void Engine::addDirection(int newDirection){
     }
 }
 
-void Engine::ResizeView(const RenderWindow& window, View& view){
-    float aspectRatio = float(window.getSize().x) / float(window.getSize().y);
+void Engine::ResizeView(RenderWindow& window){
+    auto size = window.getSize();
+    float aspectRatio = float(size.x) / float(size.y);
+
     view.setSize(Vector2f(VIEW_HEIGHT * aspectRatio, VIEW_HEIGHT));
+    window.setView(view);
+
+    uiView.setSize(Vector2f(static_cast<float>(size.x), static_cast<float>(size.y)));
+    uiView.setCenter(uiView.getSize() / 2.f);
 }
 
 void Engine::togglePause(){

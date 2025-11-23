@@ -36,6 +36,7 @@ class Engine {
 
         // View
         View view;
+        View uiView;
 
         // Snake
         vector<Snake> snake;
@@ -68,7 +69,7 @@ class Engine {
         GameOverScreen gameOverScreen;
 
         void setCurrentView(float dtSeconds);
-        void ResizeView(const RenderWindow& window, View& view);
+        void ResizeView(RenderWindow& window);
         void buildMapFromLevelImage();
 
     public:
@@ -78,7 +79,7 @@ class Engine {
         Engine();
 
         RenderWindow& getWindow() { return window; }
-        View& getView() { return view; }
+        const View& getUIView() const { return uiView; }
 
         GameState getGameState() const { return (GameState)currentGameState; }
         void setGameState(GameState state) { currentGameState = state; }

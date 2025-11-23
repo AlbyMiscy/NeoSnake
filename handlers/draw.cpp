@@ -3,6 +3,9 @@
 void Engine::draw(){
     window.clear(Color::Black);
 
+    // Assicura che la view del gioco sia attiva per disegnare il mondo
+    window.setView(view);
+
     if (currentGameState != GameState::MENU) {
         // Map
         map.Draw(window);

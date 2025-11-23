@@ -73,7 +73,7 @@ void MainMenuScreen::draw(Engine& engine)
     auto& window = engine.getWindow();
 
     View oldView = window.getView();
-    window.setView(window.getDefaultView());
+    window.setView(engine.getUIView());
 
     Vector2u size = window.getSize();
 
