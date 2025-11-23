@@ -21,6 +21,14 @@ void Engine::draw(){
         drawDirectionArrow();
     }
 
+    // Draw score HUD when in RUNNING state
+    if (currentGameState == GameState::RUNNING && scoreFontLoaded && scoreText) {
+        View oldView = window.getView();
+        window.setView(uiView);
+        window.draw(*scoreText);
+        window.setView(oldView);
+    }
+
     switch (currentGameState)
     {
         case GameState::MENU:

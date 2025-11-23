@@ -14,6 +14,7 @@
 #include <deque>
 #include <cmath>
 #include <algorithm>
+#include <optional>
 
 using namespace sf;
 using namespace std;
@@ -64,6 +65,12 @@ class Engine {
         int currentGameState; 
         int lastGameState;
 
+        // Score system
+        int score;
+        Font uiFont;
+        std::optional<Text> scoreText;
+        bool scoreFontLoaded;
+
         MainMenuScreen mainMenuScreen;
         PauseScreen pauseScreen; 
         GameOverScreen gameOverScreen;
@@ -71,6 +78,7 @@ class Engine {
         void setCurrentView(float dtSeconds);
         void ResizeView(RenderWindow& window);
         void buildMapFromLevelImage();
+        void updateScoreText();
 
     public:
         enum Direction { UP, RIGHT, DOWN, LEFT };
@@ -83,6 +91,10 @@ class Engine {
 
         GameState getGameState() const { return (GameState)currentGameState; }
         void setGameState(GameState state) { currentGameState = state; }
+
+        int getScore() const { return score; }
+        void resetScore();
+        void addScore(int delta);
 
         void handleGameKeyPressed(const Event::KeyPressed& e);
 

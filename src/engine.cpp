@@ -10,9 +10,24 @@ Engine::Engine(){
     lastGameState = currentGameState;
 
     uiView = window.getDefaultView();
+
+    // Initialize score system
+    score = 0;
+    scoreFontLoaded = false;
+
+    if (uiFont.openFromFile(RESOURCE_DIR "/fonts/PressStart2P-Regular.ttf")) {
+        scoreFontLoaded = true;
+        scoreText.emplace(uiFont);
+        scoreText->setCharacterSize(24);
+        scoreText->setFillColor(Color::White);
+        scoreText->setPosition({10.f, 10.f}); // Top-left corner with margin
+        updateScoreText();
+    }
 }
 
 void Engine::startGame(){
+    resetScore();
+    
     speed = 4;
     snakeDirection = Direction::RIGHT;
     
@@ -86,4 +101,20 @@ void Engine::setCurrentView(float dtSeconds) {
 
     view.setCenter(newCenter);
     window.setView(view);
+}
+
+void Engine::resetScore() {
+    score = 0;
+    updateScoreText();
+}
+
+void Engine::addScore(int delta) {
+    score += delta;
+    updateScoreText();
+}
+
+void Engine::updateScoreText() {
+    if (scoreFontLoaded && scoreText) {
+        scoreText->setString("Score: " + std::to_string(score));
+    }
 }

@@ -37,7 +37,7 @@ void GameOverScreen::setScore(int score)
 {
     if (!scoreText) return;
     std::ostringstream oss;
-    oss << "Punteggio: " << score;
+    oss << "Score: " << score;
     scoreText->setString(oss.str());
 }
 
