@@ -23,6 +23,9 @@ void Engine::startGame(){
         // If loading fails, continue - snake will use fallback fill color
     }
 
+    if(arrowAtlas.loadFromFile(RESOURCE_DIR "/texture/arrow.png"))
+        setupDirectionArrow();
+
     newSnake();
     moveFruit();
 
