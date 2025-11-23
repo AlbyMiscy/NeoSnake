@@ -5,7 +5,9 @@ const Time Engine::timePerFrame = seconds(1.f/60.f);
 Engine::Engine(){
     window.create(VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), "NeoSnake", Style::Resize);
     window.setFramerateLimit(FPS);
-    startGame();
+
+    currentGameState = GameState::MENU;
+    lastGameState = currentGameState;
 }
 
 void Engine::startGame(){
@@ -44,26 +46,23 @@ void Engine::startGame(){
 void Engine::run(){
     Clock clock;
 
-    // main loop - Runs until the window is closed
     while(window.isOpen()){
         Time dt = clock.restart();
 
-        if(currentGameState == GameState::PAUSED || currentGameState == GameState::GAMEOVER){
-            input();
-            if(currentGameState == GameState::GAMEOVER){
-                draw();
-            }
-            sleep(milliseconds(2));
-            continue;
+        input();  
+
+        if (currentGameState == GameState::RUNNING) {
+            timeSinceLastMove += dt;
+            setCurrentView(dt.asSeconds());
+            update();
         }
 
-        timeSinceLastMove += dt;
-        setCurrentView(dt.asSeconds());
-        input();
-        update();
         draw();
+
+        sleep(milliseconds(2));
     }
 }
+
 
 void Engine::setCurrentView(float dtSeconds) {
     Vector2f target = snake.front().getPosition();

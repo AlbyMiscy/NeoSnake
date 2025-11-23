@@ -38,6 +38,7 @@ target_compile_features(NeoSnake PRIVATE cxx_std_17)
 target_include_directories(NeoSnake PRIVATE
     ${GENERATED_DIR}
     ${CMAKE_SOURCE_DIR}/header
+    ${CMAKE_SOURCE_DIR}/header/stateGameHandler
     ${CMAKE_SOURCE_DIR}/handlers
 )
 

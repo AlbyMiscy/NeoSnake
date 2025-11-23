@@ -3,22 +3,40 @@
 void Engine::draw(){
     window.clear(Color::Black);
 
-    // Map
-    map.Draw(window);
+    if (currentGameState != GameState::MENU) {
+        // Map
+        map.Draw(window);
 
-    // Draw fruit section
-    window.draw(fruit.getSprite());
+        // Fruit
+        window.draw(fruit.getSprite());
 
-    // Draw snake section
-    for(auto & s : snake){
-        window.draw(s.getShape());
+        // Snake
+        for(auto & s : snake){
+            window.draw(s.getShape());
+        }
+
+        drawDirectionArrow();
     }
-    
-    // Draw direction arrow
-    drawDirectionArrow();
+
+    switch (currentGameState)
+    {
+        case GameState::MENU:
+            mainMenuScreen.draw(*this);
+            break;
+        case GameState::PAUSED:
+            pauseScreen.draw(*this);
+            break;
+        case GameState::GAMEOVER:
+            gameOverScreen.draw(*this);
+            break;
+        case GameState::RUNNING:
+        default:
+            break;
+    }
 
     window.display();
 }
+
 
 void Engine::buildMapFromLevelImage(){
     if(!wallText.loadFromFile(RESOURCE_DIR "/texture/wall.png")){

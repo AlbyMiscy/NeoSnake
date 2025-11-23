@@ -5,6 +5,9 @@
 #include "fruit.hpp"
 #include "map.hpp"
 #include "resource_path.h"
+#include "mainMenuScreen.hpp"
+#include "pauseScreen.hpp"
+#include "gameOverScreen.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <vector>
@@ -60,15 +63,27 @@ class Engine {
         int currentGameState; 
         int lastGameState;
 
+        MainMenuScreen mainMenuScreen;
+        PauseScreen pauseScreen; 
+        GameOverScreen gameOverScreen;
+
         void setCurrentView(float dtSeconds);
         void ResizeView(const RenderWindow& window, View& view);
         void buildMapFromLevelImage();
 
     public:
         enum Direction { UP, RIGHT, DOWN, LEFT };
-        enum GameState { RUNNING, PAUSED, GAMEOVER };
+        enum GameState { MENU, RUNNING, PAUSED, GAMEOVER };
 
         Engine();
+
+        RenderWindow& getWindow() { return window; }
+        View& getView() { return view; }
+
+        GameState getGameState() const { return (GameState)currentGameState; }
+        void setGameState(GameState state) { currentGameState = state; }
+
+        void handleGameKeyPressed(const Event::KeyPressed& e);
 
         void startGame();
 

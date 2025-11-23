@@ -2,43 +2,60 @@
 
 void Engine::input(){
     window.handleEvents(
-            [this](const sf::Event::Closed&){
-                window.close();
-            },
-            [this](const sf::Event::Resized&){
-                ResizeView(window, view);
-            },
-            [this](const sf::Event::KeyPressed& e) {
-                if(currentGameState == GameState::GAMEOVER){
-                    if(e.scancode == Keyboard::Scancode::Enter){
-                        startGame();
-                    }
-                }
-                switch (e.scancode)
-                {
-                case Keyboard::Scancode::P:
-                    togglePause();
+        [this](const sf::Event::Closed&){
+            window.close();
+        },
+        [this](const sf::Event::Resized&){
+            ResizeView(window, view);
+        },
+        [this](const sf::Event::KeyPressed& e) {
+
+            switch (currentGameState)
+            {
+                case GameState::MENU:
+                    mainMenuScreen.handleKeyPressed(*this, e);
                     break;
-                case Keyboard::Scancode::Escape:
-                    window.close();
-                    return;
-                case Keyboard::Scancode::Up:
-                    addDirection(Direction::UP);
-                    break; 
-                case Keyboard::Scancode::Down:
-                    addDirection(Direction::DOWN);
-                    break; 
-                case Keyboard::Scancode::Left:
-                    addDirection(Direction::LEFT);
-                    break; 
-                case Keyboard::Scancode::Right:
-                    addDirection(Direction::RIGHT);
-                    break; 
-                default:
+
+                case GameState::RUNNING:
+                    handleGameKeyPressed(e);
                     break;
-                }
+
+                case GameState::PAUSED:
+                    pauseScreen.handleKeyPressed(*this, e);
+                    break;
+
+                case GameState::GAMEOVER:
+                    gameOverScreen.handleKeyPressed(*this, e);
+                    break;
             }
-        );
+        }
+    );
+}
+
+void Engine::handleGameKeyPressed(const Event::KeyPressed& e){
+    switch (e.scancode)
+    {
+        case Keyboard::Scancode::P:
+            togglePause();
+            break;
+        case Keyboard::Scancode::Escape:
+            window.close();
+            return;
+        case Keyboard::Scancode::Up:
+            addDirection(Direction::UP);
+            break; 
+        case Keyboard::Scancode::Down:
+            addDirection(Direction::DOWN);
+            break; 
+        case Keyboard::Scancode::Left:
+            addDirection(Direction::LEFT);
+            break; 
+        case Keyboard::Scancode::Right:
+            addDirection(Direction::RIGHT);
+            break; 
+        default:
+            break;
+    }
 }
 
 void Engine::addDirection(int newDirection){

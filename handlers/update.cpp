@@ -1,6 +1,9 @@
 #include "engine.hpp"
 
 void Engine::update(){
+    if(currentGameState != GameState::RUNNING)
+        return;
+
     // update snake position
     if(timeSinceLastMove.asSeconds() >= seconds(1.f/float(speed)).asSeconds()){
         Vector2f thisSectionPosition = snake[0].getPosition();
