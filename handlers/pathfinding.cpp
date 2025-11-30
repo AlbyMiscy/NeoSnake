@@ -10,6 +10,8 @@ struct Node {
         : pos(p), g(gCost), h(hCost), f(gCost + hCost) {}
     
     bool operator>(const Node& other) const {
+        if (f == other.f)
+            return h > other.h;  // tie-break: nodo con H più basso
         return f > other.f;
     }
 };
