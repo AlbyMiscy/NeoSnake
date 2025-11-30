@@ -173,6 +173,30 @@ void Engine::update(){
         timeSinceLastMove = Time::Zero;
     }
     
+    // Update enemies con il frame delta time
+    updateEnemies(deltaTime.asSeconds());
+    
     // Update direction arrow animation
     updateDirectionArrow();
+}
+
+void Engine::updateEnemies(float dt) {
+    for (auto& enemy : enemies) {
+        enemy.update(dt);
+        
+        if (enemy.atEnd()) {
+            enemy.reverse();
+        }
+    }
+    
+    if (!snake.empty()) {
+        FloatRect snakeHeadBounds = snake.front().getShape().getGlobalBounds();
+        
+        for (const auto& enemy : enemies) {
+            if (snakeHeadBounds.findIntersection(enemy.bounds())) {
+                currentGameState = GameState::GAMEOVER;
+                return;
+            }
+        }
+    }
 }
