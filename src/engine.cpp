@@ -65,6 +65,7 @@ void Engine::run(){
 
     while(window.isOpen()){
         Time dt = clock.restart();
+        deltaTime = dt; // Salva per uso in update()
 
         input();  
 

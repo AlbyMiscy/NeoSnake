@@ -4,6 +4,8 @@
 #include "snake.hpp"
 #include "fruit.hpp"
 #include "map.hpp"
+#include "enemy.hpp"
+#include "pathfinding.hpp"
 #include "resource_path.h"
 #include "mainMenuScreen.hpp"
 #include "pauseScreen.hpp"
@@ -51,6 +53,10 @@ class Engine {
         Fruit fruit;
         Texture fruitAtlas;
 
+        // Enemies
+        vector<Enemy> enemies;
+        Vector2u mapSize;
+
         // Arrow
         Texture arrowAtlas;
         RectangleShape arrowSprite;
@@ -61,6 +67,7 @@ class Engine {
         const int ARROW_FRAME_COUNT = 3;
 
         Time timeSinceLastMove;
+        Time deltaTime; 
 
         int currentGameState; 
         int lastGameState;
@@ -79,6 +86,9 @@ class Engine {
         void ResizeView(RenderWindow& window);
         void buildMapFromLevelImage();
         void updateScoreText();
+        
+        void updateEnemies(float dt);
+        void drawEnemies();
 
     public:
         enum Direction { UP, RIGHT, DOWN, LEFT };
@@ -120,6 +130,8 @@ class Engine {
         Vector2f calculateArrowPosition(Vector2f snakePos, Vector2f fruitPos);
         float calculateArrowRotation(Vector2f snakePos, Vector2f fruitPos);
         void drawDirectionArrow();
+        
+        bool isBlocked(Vector2u tile) const;
 
 };
 
