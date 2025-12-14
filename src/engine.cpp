@@ -18,7 +18,7 @@ Engine::Engine(){
     // Initialize level system
     currentLevel = 1;
     fruitsEaten = 0;
-    fruitThresholds = {0, 1, 6, 9}; 
+    fruitThresholds = {0, 4, 8}; 
 
     if (uiFont.openFromFile(RESOURCE_DIR "/fonts/PressStart2P-Regular.ttf")) {
         scoreFontLoaded = true;
