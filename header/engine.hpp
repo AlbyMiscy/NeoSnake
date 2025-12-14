@@ -4,12 +4,14 @@
 #include "snake.hpp"
 #include "fruit.hpp"
 #include "map.hpp"
+#include "levelMap.hpp"
 #include "enemy.hpp"
 #include "pathfinding.hpp"
 #include "resource_path.h"
 #include "mainMenuScreen.hpp"
 #include "pauseScreen.hpp"
 #include "gameOverScreen.hpp"
+#include "nextLevelScreen.hpp"
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <vector>
@@ -17,6 +19,9 @@
 #include <cmath>
 #include <algorithm>
 #include <optional>
+#include <string>
+#include <sstream>
+#include <iomanip>
 
 using namespace sf;
 using namespace std;
@@ -33,9 +38,14 @@ class Engine {
         const unsigned int FPS = 120;
         static const Time timePerFrame;
 
-        // Map
-        Map map{20.0f};
-        Texture wallText;
+        // Map - nuovo sistema basato su CSV
+        LevelMap levelMap;
+        Texture tilesetTexture;
+        
+        // Livelli
+        int currentLevel;
+        int fruitsEaten;
+        std::vector<int> fruitThresholds; // soglie per cambio livello
 
         // View
         View view;
@@ -81,10 +91,11 @@ class Engine {
         MainMenuScreen mainMenuScreen;
         PauseScreen pauseScreen; 
         GameOverScreen gameOverScreen;
+        NextLevelScreen nextLevelScreen;
 
         void setCurrentView(float dtSeconds);
         void ResizeView(RenderWindow& window);
-        void buildMapFromLevelImage();
+        void loadLevel(int levelIndex);
         void updateScoreText();
         
         void updateEnemies(float dt);
@@ -92,7 +103,7 @@ class Engine {
 
     public:
         enum Direction { UP, RIGHT, DOWN, LEFT };
-        enum GameState { MENU, RUNNING, PAUSED, GAMEOVER };
+        enum GameState { MENU, RUNNING, PAUSED, GAMEOVER, NEXTLEVEL };
 
         Engine();
 
@@ -109,6 +120,8 @@ class Engine {
         void handleGameKeyPressed(const Event::KeyPressed& e);
 
         void startGame();
+        void restartCurrentLevel();
+        void continueToNextLevel();
 
         void input();
         void addDirection(int newDirection);

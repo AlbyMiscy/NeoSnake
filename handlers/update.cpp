@@ -37,7 +37,7 @@ void Engine::update(){
         // Collision detection - Fruit
 
         // Compute the movement offset of the snake's head based on the current direction
-        const float cell = map.getCellSize();
+        const float cell = levelMap.getCellSize();
 
         // Compute the next head position after the move
         Vector2f step(0.f, 0.f);
@@ -54,8 +54,8 @@ void Engine::update(){
         Vector2f nextHead = thisSectionPosition + step;
 
         // Get total map dimensions in world coordinates
-        const float mapW = map.getWorldWidth();
-        const float mapH = map.getWorldHeight();
+        const float mapW = levelMap.getWorldWidth();
+        const float mapH = levelMap.getWorldHeight();
 
         // Check if the next position is outside the map boundaries
         if (nextHead.x < 0.f || nextHead.y < 0.f ||
@@ -68,10 +68,10 @@ void Engine::update(){
         }
 
         // Convert the next head position into map grid coordinates
-        Vector2i c = map.worldToCell(nextHead);
+        Vector2i c = levelMap.worldToCell(nextHead);
 
         // Check if the destination cell corresponds to a wall in the map
-        if (map.isWallCell(static_cast<size_t>(c.x), static_cast<size_t>(c.y))) {
+        if (levelMap.isWallCell(static_cast<size_t>(c.x), static_cast<size_t>(c.y))) {
             currentGameState = GameState::GAMEOVER;
             gameOverScreen.setScore(score);
             timeSinceLastMove = Time::Zero;
@@ -111,8 +111,8 @@ void Engine::update(){
 
         // Apply snake skin frames and rotations 
         // Texture frames: head = (0,0,20,20), body = (20,0,20,20)
-        const sf::IntRect headRect({0, 0}, {20, 20});
-        const sf::IntRect bodyRect({20, 0}, {20, 20});
+        const IntRect headRect({0, 0}, {20, 20});
+        const IntRect bodyRect({20, 0}, {20, 20});
 
         // Head: set texture rect and rotation according to current snakeDirection
         if (!snake.empty()) {
@@ -139,7 +139,7 @@ void Engine::update(){
             Vector2f delta = ahead - cur;
 
             float angle = 0.f;
-            if (std::abs(delta.x) > std::abs(delta.y)) {
+            if (abs(delta.x) > abs(delta.y)) {
                 // horizontal
                 if (delta.x > 0.f) angle = 90.f; // facing right
                 else angle = 270.f; // facing left
@@ -156,6 +156,28 @@ void Engine::update(){
             sectionToAdd += 4;
             speed++;
             addScore(1);
+            fruitsEaten++;
+            
+            // Controlla se bisogna passare al livello successivo
+            bool shouldLevelUp = false;
+            for (size_t i = 0; i < fruitThresholds.size(); ++i) {
+                if (i == fruitThresholds.size() - 1) {
+                    // Ultimo threshold raggiunto, nessun altro livello
+                    break;
+                }
+                if (fruitsEaten == fruitThresholds[i + 1] && currentLevel == static_cast<int>(i + 1)) {
+                    shouldLevelUp = true;
+                    break;
+                }
+            }
+            
+            if (shouldLevelUp && currentLevel < static_cast<int>(fruitThresholds.size())) {
+                // Mostra la schermata di passaggio livello
+                currentGameState = GameState::NEXTLEVEL;
+                timeSinceLastMove = Time::Zero;
+                return;
+            }
+            
             moveFruit(); 
         }
 

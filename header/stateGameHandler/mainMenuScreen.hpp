@@ -1,8 +1,10 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "iscreen.hpp"
 #include <optional>
+#include "iscreen.hpp"
+#include "levelMap.hpp"
+#include "resource_path.h"
 
 using namespace sf;
 using namespace std;
@@ -16,6 +18,13 @@ class MainMenuScreen : public IScreen {
         optional<Text> startText;
         optional<Text> quitText;
         int selectedIndex = 0;
+
+        // Background 
+        VertexArray grassBackgroundVA;
+        VertexArray wallBackgroundVA;
+        VertexArray enemiesBackgroundVA;
+        Texture backgroundTileset;
+        bool backgroundLoaded;
 
     public:
         MainMenuScreen();

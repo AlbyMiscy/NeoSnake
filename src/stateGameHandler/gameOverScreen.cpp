@@ -1,7 +1,5 @@
 #include "gameOverScreen.hpp"
 #include "engine.hpp"
-#include "resource_path.h"
-#include <sstream>
 
 GameOverScreen::GameOverScreen()
 : fontLoaded(false),
@@ -30,13 +28,13 @@ selectedIndex(0)
         quitText->setFillColor(Color::White);
     }
 
-    overlay.setFillColor(sf::Color(0, 0, 0, 180));
+    overlay.setFillColor(Color(0, 0, 0, 180));
 }
 
 void GameOverScreen::setScore(int score)
 {
     if (!scoreText) return;
-    std::ostringstream oss;
+    ostringstream oss;
     oss << "Score: " << score;
     scoreText->setString(oss.str());
 }
@@ -57,8 +55,8 @@ void GameOverScreen::handleKeyPressed(Engine& engine, const Event::KeyPressed& k
 
         case Keyboard::Scancode::Enter:
             if (selectedIndex == 0) {
-                // RESTART
-                engine.startGame();
+                // RESTART - riavvia il livello corrente con score a 0
+                engine.restartCurrentLevel();
             } else {
                 // QUIT
                 engine.getWindow().close();

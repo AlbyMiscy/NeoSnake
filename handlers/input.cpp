@@ -27,6 +27,10 @@ void Engine::input(){
                 case GameState::GAMEOVER:
                     gameOverScreen.handleKeyPressed(*this, e);
                     break;
+
+                case GameState::NEXTLEVEL:
+                    nextLevelScreen.handleKeyPressed(*this, e);
+                    break;
             }
         }
     );

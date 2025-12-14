@@ -22,6 +22,9 @@ struct Vector2uHash {
     }
 };
 
+/**
+ * Calcola la distanza di Manhattan tra due punti sulla griglia
+ */
 static float manhattan(Vector2u a, Vector2u b) {
     return static_cast<float>(abs(static_cast<int>(a.x) - static_cast<int>(b.x)) + 
                               abs(static_cast<int>(a.y) - static_cast<int>(b.y)));
@@ -32,7 +35,7 @@ bool Engine::isBlocked(Vector2u tile) const {
         return true;
     }
     
-    return map.isWallCell(tile.x, tile.y);
+    return levelMap.isWallCell(tile.x, tile.y);
 }
 
 deque<Vector2u> astar(const GridProvider& grid, 
@@ -103,4 +106,28 @@ deque<Vector2u> astar(const GridProvider& grid,
     }
     
     return {};
+}
+
+Vector2u findNearestGreenPatrol(
+    const Vector2u& yellowStart,
+    const vector<Vector2u>& greenPatrols
+) {
+    // Se non ci sono punti verdi, ritorna il punto giallo stesso (caso fallback)
+    if (greenPatrols.empty()) {
+        return yellowStart;
+    }
+    
+    // Trova il punto verde con la distanza di Manhattan minima
+    Vector2u nearest = greenPatrols[0];
+    float minDistance = manhattan(yellowStart, greenPatrols[0]);
+    
+    for (size_t i = 1; i < greenPatrols.size(); ++i) {
+        float distance = manhattan(yellowStart, greenPatrols[i]);
+        if (distance < minDistance) {
+            minDistance = distance;
+            nearest = greenPatrols[i];
+        }
+    }
+    
+    return nearest;
 }
