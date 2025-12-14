@@ -1,11 +1,24 @@
 #include "mainMenuScreen.hpp"
 #include "engine.hpp"
-#include "resource_path.h"
 
 MainMenuScreen::MainMenuScreen()
 : fontLoaded(false),
-selectedIndex(0)
+selectedIndex(0),
+backgroundLoaded(false)
 {
+    if (backgroundTileset.loadFromFile(RESOURCE_DIR "/texture/menu_tileset.png")) {
+        backgroundTileset.setSmooth(false); // Disabilita smoothing per evitare texture bleeding
+        string grassPath = string(RESOURCE_DIR) + "/backgroundMenu/menuBackground_grass_background.csv";
+        string wallPath = string(RESOURCE_DIR) + "/backgroundMenu/menuBackground_wall_background.csv";
+        string enemiesPath = string(RESOURCE_DIR) + "/backgroundMenu/menuBackground_enemies_background.csv";
+        
+        bool grassLoaded = LevelMap::buildBackgroundFromCsv(grassBackgroundVA, grassPath, backgroundTileset, 20.f);
+        bool wallLoaded = LevelMap::buildBackgroundFromCsv(wallBackgroundVA, wallPath, backgroundTileset, 20.f);
+        bool enemiesLoaded = LevelMap::buildBackgroundFromCsv(enemiesBackgroundVA, enemiesPath, backgroundTileset, 20.f);
+        
+        backgroundLoaded = grassLoaded && enemiesLoaded && wallLoaded;
+    }
+    
     if (font.openFromFile(RESOURCE_DIR "/fonts/PressStart2P-Regular.ttf")) {
         fontLoaded = true;
 
@@ -13,7 +26,7 @@ selectedIndex(0)
         titleText.emplace(font);
         titleText->setString("NeoSnake");
         titleText->setCharacterSize(55);
-        titleText->setFillColor(sf::Color::Green);
+        titleText->setFillColor(Color(0, 180, 0)); // Verde scuro
 
         // start option
         startText.emplace(font);
@@ -74,6 +87,22 @@ void MainMenuScreen::draw(Engine& engine)
 
     View oldView = window.getView();
     window.setView(engine.getUIView());
+
+    // Draw background layers (grass first, enemies, then wall on top)
+    if (backgroundLoaded) {
+        // Calculate scale to fit background to current view size
+        Vector2u windowSize = window.getSize();
+        float scaleX = static_cast<float>(windowSize.x) / 1280.f; // Original design width
+        float scaleY = static_cast<float>(windowSize.y) / 720.f;  // Original design height
+        
+        RenderStates states;
+        states.texture = &backgroundTileset;
+        states.transform.scale({scaleX, scaleY});
+        
+        window.draw(grassBackgroundVA, states);
+        window.draw(enemiesBackgroundVA, states);
+        window.draw(wallBackgroundVA, states);
+    }
 
     Vector2u size = window.getSize();
 

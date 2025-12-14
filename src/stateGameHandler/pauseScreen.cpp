@@ -1,6 +1,5 @@
 #include "pauseScreen.hpp"
 #include "engine.hpp"
-#include "resource_path.h"
 
 PauseScreen::PauseScreen()
 : fontLoaded(false),

@@ -8,7 +8,7 @@ void Engine::draw(){
 
     if (currentGameState != GameState::MENU) {
         // Map
-        map.Draw(window);
+        levelMap.draw(window);
 
         // Fruit
         window.draw(fruit.getSprite());
@@ -43,6 +43,9 @@ void Engine::draw(){
         case GameState::GAMEOVER:
             gameOverScreen.draw(*this);
             break;
+        case GameState::NEXTLEVEL:
+            nextLevelScreen.draw(*this);
+            break;
         case GameState::RUNNING:
         default:
             break;
@@ -52,70 +55,77 @@ void Engine::draw(){
 }
 
 
-void Engine::buildMapFromLevelImage(){
-    if(!wallText.loadFromFile(RESOURCE_DIR "/texture/wall.png")){
-        return;
-    }
-    else map.SetTileTexture(&wallText);
-
-    Image img;
-
-    if (!img.loadFromFile(RESOURCE_DIR "/levels/Level01.png")) {
-        // fallback
+void Engine::loadLevel(int levelIndex){
+    // Carica il tileset una sola volta
+    if(!tilesetTexture.loadFromFile(RESOURCE_DIR "/texture/map_tileset.png")){
+        cerr << "Errore: impossibile caricare map_tileset.png" << endl;
         return;
     }
 
-    map.CreateFromImage(img);
-    
-    mapSize = img.getSize();
-    
-    vector<Vector2u> patrolA; // giallo
-    vector<Vector2u> patrolB; // verde
-    
-    for (unsigned int x = 0; x < img.getSize().x; ++x) {
-        for (unsigned int y = 0; y < img.getSize().y; ++y) {
-            Color pixel = img.getPixel({x, y});
-            
-            // Giallo = patrol point A
-            if (pixel == Color::Yellow) {
-                patrolA.emplace_back(x, y);
-            }
-            // Verde = patrol point B
-            else if (pixel == Color::Green) {
-                patrolB.emplace_back(x, y);
-            }
-        }
+    // Costruisci il percorso della cartella del livello
+    ostringstream oss;
+    oss << RESOURCE_DIR "/maps/level" << setfill('0') << setw(2) << levelIndex;
+    string levelFolderPath = oss.str();
+
+    // Carica la mappa dal livello
+    if (!levelMap.loadFromFolder(levelFolderPath, tilesetTexture)) {
+        cerr << "Errore: impossibile caricare il livello " << levelIndex << endl;
+        return;
     }
-    
+
+    // Aggiorna mapSize in base alla griglia caricata
+    mapSize = levelMap.getGridSize();
+
+    // Ottieni i punti di pattuglia
+    const vector<Vector2u>& patrolA = levelMap.getPatrolPointsA();
+    const vector<Vector2u>& patrolB = levelMap.getPatrolPointsB();
+
     enemies.clear();
-    size_t n = std::min(patrolA.size(), patrolB.size());
-    
+
     // Classe helper per GridProvider
     class MyGrid : public GridProvider {
         const Engine* engine;
     public:
         MyGrid(const Engine* e) : engine(e) {}
-        
+
         Vector2u size() const override {
             return engine->mapSize;
         }
-        
+
         bool isBlocked(Vector2u tile) const override {
             return engine->isBlocked(tile);
         }
     };
-    
+
     MyGrid grid(this);
-    
-    for (size_t i = 0; i < n; ++i) {
+
+    // Per ogni punto GIALLO (patrol start):
+    // 1) Trova il punto VERDE più vicino usando findNearestGreenPatrol
+    // 2) Calcola il percorso con A* UNA SOLA VOLTA
+    // 3) Crea il nemico e assegna il percorso
+    for (size_t i = 0; i < patrolA.size(); ++i) {
+        Vector2u yellowStart = patrolA[i];
+        
+        // Trova il punto verde più vicino a questo punto giallo
+        Vector2u greenEnd = findNearestGreenPatrol(yellowStart, patrolB);
+        
+        // Alterna il tipo di texture per variare l'aspetto dei nemici
         Enemy::TextureType type = (i % 2 == 0) ? Enemy::Enemy1 : Enemy::Enemy2;
-        
-        enemies.emplace_back(patrolA[i], patrolB[i], type);
-        
-        deque<Vector2u> path = astar(grid, patrolA[i], patrolB[i]);
-        
+
+        // Crea il nemico (i parametri yellowStart e greenEnd sono usati solo per inizializzare la posizione)
+        enemies.emplace_back(yellowStart, greenEnd, type);
+
+        // Calcola il percorso con A* dal punto giallo al punto verde associato
+        deque<Vector2u> path = astar(grid, yellowStart, greenEnd);
+
+        // Assegna il percorso al nemico (verrà seguito in loop con reverse)
         if (!path.empty()) {
             enemies.back().setPath(path);
+        } else {
+            // Se A* non trova un percorso, segnala l'errore
+            cerr << "Attenzione: nessun percorso trovato per il nemico " << i 
+                 << " da (" << yellowStart.x << "," << yellowStart.y << ") a (" 
+                 << greenEnd.x << "," << greenEnd.y << ")" << endl;
         }
     }
 }

@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <random>
 
 using namespace sf;
 using namespace std;

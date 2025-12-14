@@ -1,5 +1,4 @@
 #include "fruit.hpp"
-#include <random>
 
 Fruit::Fruit(){
     Vector2f startPosition(400, 300);
@@ -40,5 +39,5 @@ void Fruit::pickRandomFrame(){
 
     sprite.setTextureRect(IntRect(Vector2i(left, 0), Vector2i(static_cast<int>(frameW), static_cast<int>(frameH))));
 
-    sprite.setSize(Vector2f(20.f, 20.f));
+    sprite.setSize(Vector2f(25.f, 25.f));
 }

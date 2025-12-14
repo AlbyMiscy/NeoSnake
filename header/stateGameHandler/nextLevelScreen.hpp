@@ -1,32 +1,29 @@
-#pragma once
+#pragma once 
 
 #include <SFML/Graphics.hpp>
-#include <optional>
-#include <sstream>
 #include "iscreen.hpp"
+#include <optional>
 #include "resource_path.h"
 
 using namespace sf;
 using namespace std;
 
-class GameOverScreen : public IScreen {
+class NextLevelScreen : public IScreen {
     private:
         Font font;
-        optional<Text> gameOverText;
-        optional<Text> scoreText;
+        optional<Text> nextLevelText;
         RectangleShape overlay;  
         bool fontLoaded;
 
         optional<Text> restartText;
+        optional<Text> continueText;
         optional<Text> quitText;
         int selectedIndex = 0;
 
     public:
-        GameOverScreen();
+        NextLevelScreen();
         
         void handleKeyPressed(Engine& engine, const Event::KeyPressed& keyEvent) override;
         void update(Engine& engine, Time dt) override;
-        void draw(Engine& engine) override;
-        
-        void setScore(int score); 
+        void draw(Engine& engine) override;        
 };

@@ -13,6 +13,8 @@ Enemy::Enemy(Vector2u patrolA, Vector2u patrolB, TextureType type)
     , m_animTimer(0.f)
     , m_forward(true)
 {
+    (void)patrolA;  // Suppress unused parameter warning
+    (void)patrolB;  // Suppress unused parameter warning
     ensureTexture();
     
     if (m_type == Enemy1 && s_tex1) {
@@ -23,7 +25,7 @@ Enemy::Enemy(Vector2u patrolA, Vector2u patrolB, TextureType type)
     
     if (m_sprite) {
         m_sprite->setTextureRect(IntRect({0, 0}, {TILE_SIZE, TILE_SIZE}));
-        m_sprite->setScale({1.2f, 1.2f}); 
+        m_sprite->setScale({1.5f, 1.5f}); 
         m_sprite->setOrigin({TILE_SIZE / 2.f, TILE_SIZE / 2.f}); 
     }
     
@@ -164,7 +166,7 @@ void Enemy::reverse() {
 }
 
 Vector2u Enemy::currentTile() const {
-    return sf::Vector2u(
+    return Vector2u(
         static_cast<unsigned int>(m_posPx.x / TILE_SIZE),
         static_cast<unsigned int>(m_posPx.y / TILE_SIZE)
     );
